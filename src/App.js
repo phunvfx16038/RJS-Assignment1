@@ -1,13 +1,21 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component } from "react";
+import { STAFFS } from "./Data/staffs.jsx";
+import EmployeeList from "./Components/EmployeeList";
+import { Navbar } from "reactstrap";
 class App extends Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      staffs: STAFFS,
+    };
+  }
   render() {
     return (
-      <div className="App">
-        <p>Sample cho toàn bộ lab và project trong môn học Lập Trình Web Front-End với React với đầy đủ dependency.</p>
-        <p>Phiên bản React hiện tại trên máy của bạn là: {React.version}</p>
-        <p>Phiên bản React đã được sử dụng để thiết kế môn học: 16.14.0.</p>
+      <div className="container">
+        <Navbar color="primary" expand="md" light>
+          Ứng dụng quản lý nhân sự v1.0
+        </Navbar>
+        <EmployeeList staffs={this.state.staffs} />
       </div>
     );
   }
