@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Header from "./Header";
-
+import Footer from "./Footer";
 class Main extends Component {
   constructor(props) {
     super(props);
@@ -9,6 +9,7 @@ class Main extends Component {
     return (
       <div className="container container-sm container-md">
         <Header />
+        <Footer />
       </div>
     );
   }
