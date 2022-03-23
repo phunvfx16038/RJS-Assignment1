@@ -7,6 +7,7 @@ import Employee from "./Employee.js";
 import Department from "./Department.js";
 import Salary from "./Salary.js";
 import { STAFFS, DEPARTMENTS } from "../Data/staffs.jsx";
+import ModalInput from "./Modal";
 class Main extends Component {
   constructor(props) {
     super(props);
@@ -24,6 +25,7 @@ class Main extends Component {
     return (
       <div className="container container-sm container-md">
         <Header parentCallback={this.callbackFunction} />
+        <ModalInput />
         <Switch>
           <Route
             exact

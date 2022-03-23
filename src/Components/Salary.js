@@ -1,19 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  Col,
-  Container,
-  Input,
-  InputGroup,
-  Row,
-} from "reactstrap";
+import { Breadcrumb, BreadcrumbItem, Col, Container, Row } from "reactstrap";
 
 class Salary extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     let { staffs, searchValue } = this.props;
 
