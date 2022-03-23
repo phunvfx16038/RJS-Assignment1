@@ -13,28 +13,46 @@ class Main extends Component {
     this.state = {
       staffs: STAFFS,
       departments: DEPARTMENTS,
+      searchValue: "",
     };
   }
+  callbackFunction = (childData) => {
+    this.setState({ searchValue: childData });
+  };
   render() {
+    console.log(this.state.searchValue);
     return (
       <div className="container container-sm container-md">
-        <Header />
+        <Header parentCallback={this.callbackFunction} />
         <Switch>
           <Route
             exact
             path="/employeelists"
-            component={() => <EmployeeList staffs={this.state.staffs} />}
+            component={() => (
+              <EmployeeList
+                staffs={this.state.staffs}
+                searchValue={this.state.searchValue}
+              />
+            )}
           />
           <Route path="/employeelists/:id" component={Employee} />
           <Route
             path="/department"
             component={() => (
-              <Department departments={this.state.departments} />
+              <Department
+                departments={this.state.departments}
+                searchValue={this.state.searchValue}
+              />
             )}
           />
           <Route
             path="/salary"
-            component={() => <Salary staffs={this.state.staffs} />}
+            component={() => (
+              <Salary
+                staffs={this.state.staffs}
+                searchValue={this.state.searchValue}
+              />
+            )}
           />
           <Redirect to="/employeelists" />
         </Switch>

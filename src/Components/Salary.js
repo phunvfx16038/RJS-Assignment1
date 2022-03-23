@@ -13,16 +13,9 @@ import {
 class Salary extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      searchValue: "",
-    };
-  }
-  handleChange(e) {
-    this.setState({ searchValue: e.target.value });
   }
   render() {
-    let { searchValue } = this.state;
-    let { staffs } = this.props;
+    let { staffs, searchValue } = this.props;
 
     let dataSearch = staffs.filter((staff) => {
       return staff.name.toLowerCase().includes(searchValue.toLowerCase());
@@ -52,13 +45,6 @@ class Salary extends Component {
           <BreadcrumbItem active>Bảng lương</BreadcrumbItem>
         </Breadcrumb>
         <Container>
-          <InputGroup className="mb-3">
-            <Input
-              value={searchValue}
-              onChange={this.handleChange.bind(this)}
-              placeholder="search name here"
-            />
-          </InputGroup>
           <Row>{departmentList}</Row>
         </Container>
       </React.Fragment>

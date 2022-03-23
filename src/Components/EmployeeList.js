@@ -10,7 +10,13 @@ class EmployeeList extends Component {
     };
   }
   render() {
-    const staffList = this.props.staffs.map((staff) => {
+    let dataSearch = this.props.staffs.filter((staff) => {
+      return staff.name
+        .toLowerCase()
+        .includes(this.props.searchValue.toLowerCase());
+    });
+
+    const staffList = dataSearch.map((staff) => {
       return (
         <Col
           md="4"

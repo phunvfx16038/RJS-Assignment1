@@ -6,6 +6,9 @@ import {
   NavbarToggler,
   Navbar,
   Collapse,
+  Input,
+  Button,
+  InputGroup,
 } from "reactstrap";
 import {
   AiOutlineTeam,
@@ -19,7 +22,17 @@ class Header extends Component {
     super(props);
     this.state = {
       isOpen: false,
+      searchValue: "",
     };
+  }
+  sendData = () => {
+    this.props.parentCallback(this.state.searchValue);
+  };
+  handleChange(e) {
+    this.setState({ searchValue: e.target.value });
+  }
+  handleClick() {
+    this.sendData();
   }
   render() {
     return (
@@ -56,6 +69,16 @@ class Header extends Component {
             </NavItem>
           </Nav>
         </Collapse>
+        <NavItem style={{ listStyle: "none" }}>
+          <InputGroup>
+            <Input
+              value={this.state.searchValue}
+              onChange={this.handleChange.bind(this)}
+              placeholder="search name here"
+            />
+            <Button onClick={this.handleClick.bind(this)}>Tìm</Button>
+          </InputGroup>
+        </NavItem>
       </Navbar>
     );
   }
