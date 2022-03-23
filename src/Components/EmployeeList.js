@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Col, Container, Row } from "reactstrap";
-import dateFormat from "dateformat";
+
+import { Link } from "react-router-dom";
 class EmployeeList extends Component {
   constructor(props) {
     super(props);
@@ -8,39 +9,22 @@ class EmployeeList extends Component {
       onSelecteStaff: null,
     };
   }
-  onClickEmployee(staff) {
-    this.setState({ onSelecteStaff: staff });
-  }
-
-  renderDetail(staff) {
-    if (staff !== null) {
-      return (
-        <Col className="bg-light border p-3" style={{ textAlign: "left" }}>
-          <h3>Họ và tên: {staff.name}</h3>
-          <p>Ngày sinh: {dateFormat(staff.doB, "paddedShortDate")}</p>
-          <p>
-            Ngày vào công ty: {dateFormat(staff.startDate, "paddedShortDate")}
-          </p>
-          <p>Phòng ban: {staff.department.name}</p>
-          <p>Số ngày nghỉ còn lại: {staff.annualLeave}</p>
-          <p>Số ngày đã làm thêm: {staff.overTime}</p>
-        </Col>
-      );
-    } else {
-      return <div></div>;
-    }
-  }
   render() {
     const staffList = this.props.staffs.map((staff) => {
       return (
         <Col
-          xs="6"
+          md="4"
+          lg="2"
           key={staff.id}
-          className="bg-light border p-2"
-          onClick={() => this.onClickEmployee(staff)}
+          className="bg-light border p-2 text-center"
           style={{ cursor: "pointer" }}
         >
-          {staff.name}
+          <Link to={{ pathname: `/employeelists/${staff.id}`, state: staff }}>
+            <div className="mb-2">
+              <img src={staff.image} alt={staff.name} />
+            </div>
+            <p>{staff.name}</p>
+          </Link>
         </Col>
       );
     });
@@ -48,7 +32,6 @@ class EmployeeList extends Component {
     return (
       <Container>
         <Row>{staffList}</Row>
-        <Row>{this.renderDetail(this.state.onSelecteStaff)}</Row>
       </Container>
     );
   }
