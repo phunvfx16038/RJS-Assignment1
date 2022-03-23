@@ -25,7 +25,6 @@ class Main extends Component {
     return (
       <div className="container container-sm container-md">
         <Header parentCallback={this.callbackFunction} />
-        <ModalInput />
         <Switch>
           <Route
             exact
