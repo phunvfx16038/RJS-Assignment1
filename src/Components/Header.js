@@ -24,15 +24,16 @@ class Header extends Component {
       isOpen: false,
       searchValue: "",
     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
-  sendData = () => {
-    this.props.parentCallback(this.state.searchValue);
-  };
+
   handleChange(e) {
     this.setState({ searchValue: e.target.value });
   }
   handleClick() {
-    this.sendData();
+    this.props.searchValueInput(this.state.searchValue);
   }
   render() {
     return (

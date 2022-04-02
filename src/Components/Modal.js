@@ -1,49 +1,129 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-
+import {
+  Button,
+  Col,
+  Input,
+  Label,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
+import { LocalForm, Control } from "react-redux-form";
 class ModalInput extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
     };
+
+    this.toggle = this.toggle.bind(this);
   }
-  togglePopup() {
-    this.setState({ modal: !this.state.modal });
+
+  toggle() {
+    this.setState({
+      modal: !this.state.modal,
+    });
   }
   render() {
     return (
       <React.Fragment>
-        <Button color="danger" onClick={this.togglePopup.bind(this)}>
-          Click Me
+        <Button color="success" onClick={this.toggle} className="my-3">
+          {this.props.buttonLabel}
         </Button>
         <Modal
-          external={
-            <button
-              className="close"
-              onClick={this.togglePopup.bind(this)}
-              style={{ position: "absolute", right: "15px", top: "15px" }}
-            >
-              ×
-            </button>
-          }
-          toggle={this.togglePopup.bind(this)}
+          isOpen={this.state.modal}
+          toggle={this.toggle}
+          className={this.props.className}
         >
-          <ModalHeader>Modal title</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Thêm nhân viên</ModalHeader>
           <ModalBody>
-            <b>Look at the top right of the page/viewport!</b>
-            <br />
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+              <Row className="form-group">
+                <Label htmlFor="exampleName" sm={4}>
+                  Tên
+                </Label>
+                <Col sm={8}>
+                  <Input
+                    type="text"
+                    name="name"
+                    placeholder="Họ và tên"
+                    className="form-control"
+                  />
+                </Col>
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="doB" sm={4}>
+                  Ngày sinh
+                </Label>
+                <Col sm={8}>
+                  <Input
+                    className="form-control"
+                    id="doB"
+                    name="doB"
+                    placeholder="dd/mm/yyyy"
+                    type="date"
+                  />
+                </Col>
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="workday" sm={4}>
+                  Ngày vào công ty
+                </Label>
+                <Col sm={8}>
+                  <Input
+                    className="form-control"
+                    id="startDate"
+                    name="startDate"
+                    placeholder="dd/mm/yyyy"
+                    type="date"
+                  />
+                </Col>
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="department" sm={4}>
+                  Phòng ban
+                </Label>
+                <Col sm={8}>
+                  <Input id="department" name="department" type="select">
+                    <option>Sale</option>
+                    <option>HR</option>
+                    <option>Marketing</option>
+                    <option>IT</option>
+                    <option>Finance</option>
+                  </Input>
+                </Col>
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="exampleName" sm={4}>
+                  Hệ số lương
+                </Label>
+                <Col sm={8}>
+                  <Input name="salaryScale" type="text" />
+                </Col>
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="annualLeave" sm={4}>
+                  Số ngày nghỉ còn lại
+                </Label>
+                <Col sm={8}>
+                  <Input name="annualLeave" type="text" />
+                </Col>
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="overTime" sm={4}>
+                  Số ngày làm thêm
+                </Label>
+                <Col sm={8}>
+                  <Input name="overTime" type="text" />
+                </Col>
+              </Row>
+            </LocalForm>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.togglePopup.bind(this)}>
-              Do Something
+            <Button color="primary" onClick={this.toggle}>
+              Thêm
             </Button>{" "}
           </ModalFooter>
         </Modal>

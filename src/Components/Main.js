@@ -1,38 +1,67 @@
 import React, { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import EmployeeList from "./EmployeeList.js";
 import Employee from "./Employee.js";
 import Department from "./Department.js";
 import Salary from "./Salary.js";
-import { STAFFS, DEPARTMENTS } from "../Data/staffs.jsx";
-import ModalInput from "./Modal";
-class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      staffs: STAFFS,
-      departments: DEPARTMENTS,
-      searchValue: "",
-    };
-  }
-  callbackFunction = (childData) => {
-    this.setState({ searchValue: childData });
+import { connect } from "react-redux";
+import { addStaff, searchValueInput } from "../redux/ActionCreater";
+
+const mapStateToProps = (state) => {
+  return {
+    staffs: state.staffs,
+    departments: state.departments,
+    searchValue: state.searchValue,
   };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  addStaff: (
+    id,
+    name,
+    doB,
+    salaryScale,
+    startDate,
+    department,
+    annualLeave,
+    overTime,
+    image
+  ) =>
+    dispatch(
+      addStaff(
+        id,
+        name,
+        doB,
+        salaryScale,
+        startDate,
+        department,
+        annualLeave,
+        overTime,
+        image
+      )
+    ),
+  searchValueInput: (searchValue) => dispatch(searchValueInput(searchValue)),
+});
+class Main extends Component {
   render() {
-    console.log(this.state.searchValue);
     return (
       <div className="container container-sm container-md">
-        <Header parentCallback={this.callbackFunction} />
+        <Header searchValueInput={this.props.searchValueInput} />
+
         <Switch>
           <Route
             exact
             path="/employeelists"
             component={() => (
               <EmployeeList
-                staffs={this.state.staffs}
-                searchValue={this.state.searchValue}
+                staffs={this.props.staffs}
+                searchValue={this.props.searchValue}
+                addStaff={this.props.addStaff}
+                id={this.props.id}
+                searchValueInput={this.props.searchValueInput}
+                departments={this.props.departments}
               />
             )}
           />
@@ -41,8 +70,8 @@ class Main extends Component {
             path="/department"
             component={() => (
               <Department
-                departments={this.state.departments}
-                searchValue={this.state.searchValue}
+                departments={this.props.departments}
+                searchValue={this.props.searchValue}
               />
             )}
           />
@@ -50,8 +79,8 @@ class Main extends Component {
             path="/salary"
             component={() => (
               <Salary
-                staffs={this.state.staffs}
-                searchValue={this.state.searchValue}
+                staffs={this.props.staffs}
+                searchValue={this.props.searchValue}
               />
             )}
           />
@@ -63,4 +92,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
