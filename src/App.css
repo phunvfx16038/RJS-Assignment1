@@ -31,24 +31,20 @@ address{
 .navbar-dark {
     background-color:#512DA8;
 }
-.page-enter {
+.fade-enter {
     opacity: 0.01;
-    transform: translateX(-100%);
-}
-
-.page-enter-active {
+  }
+  
+  .fade-enter.fade-enter-active {
     opacity: 1;
-    transform: translateX(0%);
-    transition: all 300ms ease-in;
-}
-
-.page-exit {
+    transition: opacity 1000ms ease-in;
+  }
+  
+  .fade-exit {
     opacity: 1;
-    transform: translateX(0%);
-}
-
-.page-exit-active {
+  }
+  
+  .fade-exit.fade-exit-active {
     opacity: 0.01;
-    transform: translateX(100%);
-    transition: all 300ms ease-out;
-}
+    transition: opacity 800ms ease-in;
+  }

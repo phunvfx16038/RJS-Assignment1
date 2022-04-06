@@ -11,7 +11,6 @@ class Employee extends Component {
   }
 
   renderDetail() {
-    console.log(this.state.staff);
     if (this.state.staff !== null) {
       return (
         <React.Fragment>
@@ -31,11 +30,7 @@ class Employee extends Component {
               Ngày vào công ty:{" "}
               {dateFormat(this.state.staff.startDate, "paddedShortDate")}
             </p>
-            <p>
-              Phòng ban:{" "}
-              {this.state.staff.department.name ||
-                this.state.staff.department[0].name}
-            </p>
+            <p>Phòng ban: {this.state.staff.departmentId}</p>
             <p>Số ngày nghỉ còn lại: {this.state.staff.annualLeave}</p>
             <p>Số ngày đã làm thêm: {this.state.staff.overTime}</p>
           </Col>

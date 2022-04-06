@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { FadeTransform } from "react-animation-components";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -13,18 +13,22 @@ import {
   Container,
   Form,
   FormFeedback,
+  ModalFooter,
 } from "reactstrap";
+import { Loading } from "./Loading";
 
 class EmployeeList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
+      deleteModal: false,
+      deleteId: null,
       newStaff: {
         name: "",
         doB: "",
         salaryScale: 0,
-        department: "Sale",
+        department: "Dept01",
         startDate: "",
         annualLeave: 0,
         overTime: 0,
@@ -37,9 +41,15 @@ class EmployeeList extends Component {
       },
     };
     this.toggle = this.toggle.bind(this);
+    this.toggleEdit = this.toggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this.handleDeleleStaff = this.handleDeleleStaff.bind(this);
+    this.toggleDeletePopup = this.toggleDeletePopup.bind(this);
+    this.handleConfirmDeleteBtnModal =
+      this.handleConfirmDeleteBtnModal.bind(this);
+    this.handleCancleBtnModal = this.handleCancleBtnModal.bind(this);
   }
   toggle() {
     this.setState({
@@ -134,7 +144,7 @@ class EmployeeList extends Component {
       this.state.newStaff.annualLeave !== "" &&
       this.state.newStaff.overTime !== ""
     ) {
-      this.props.addStaff(
+      this.props.postStaff(
         this.props.id,
         this.state.newStaff.name,
         this.state.newStaff.doB,
@@ -145,10 +155,30 @@ class EmployeeList extends Component {
         this.state.newStaff.overTime,
         this.state.newStaff.image
       );
+      this.toggle();
     }
   }
 
+  toggleDeletePopup() {
+    this.setState({
+      deleteModal: !this.state.deleteModal,
+    });
+  }
+
+  handleDeleleStaff(id) {
+    this.setState({
+      deleteId: id,
+    });
+    this.toggleDeletePopup();
+  }
+  handleConfirmDeleteBtnModal() {
+    this.props.deleteStaff(this.state.deleteId);
+  }
+  handleCancleBtnModal() {
+    this.toggleDeletePopup();
+  }
   render() {
+    console.log(this.props.departments);
     const errors = this.validate(
       this.state.newStaff.name,
       this.state.newStaff.doB,
@@ -158,29 +188,56 @@ class EmployeeList extends Component {
       this.state.newStaff.overTime
     );
 
-    let dataSearch = this.props.staffs.filter((staff) => {
-      return staff.name
-        .toLowerCase()
-        .includes(this.props.searchValue.search.toLowerCase());
-    });
-    const staffList = dataSearch.map((staff) => {
-      return (
-        <Col
-          md="4"
-          lg="2"
-          key={staff.id}
-          className="bg-light border p-2 text-center"
-          style={{ cursor: "pointer" }}
-        >
-          <Link to={{ pathname: `/employeelists/${staff.id}`, state: staff }}>
-            <div className="mb-2">
-              <img src={staff.image} alt={staff.name} />
-            </div>
-            <p>{staff.name}</p>
-          </Link>
-        </Col>
-      );
-    });
+    const StaffList = () => {
+      if (this.props.staffs.staffs !== null) {
+        let dataSearch = this.props.staffs.staffs.filter((staff) => {
+          return staff.name
+            .toLowerCase()
+            .includes(this.props.searchValue.search.toLowerCase());
+        });
+
+        const staffList = dataSearch.map((staff) => {
+          return (
+            <Col
+              md="4"
+              lg="2"
+              key={staff.id}
+              className="bg-light border p-2 text-center"
+              style={{ cursor: "pointer" }}
+            >
+              <Link
+                to={{
+                  pathname: `/employeelists/${staff.id}`,
+                  state: staff,
+                }}
+              >
+                <div className="mb-2">
+                  <img src={staff.image} alt={staff.name} />
+                </div>
+                <p>{staff.name}</p>
+              </Link>
+              <Link
+                to={{
+                  pathname: `/employeelists/edit/${staff.id}`,
+                  state: staff,
+                }}
+              >
+                <Button color="success" className="mr-2">
+                  Cập nhật
+                </Button>
+              </Link>
+              <Button
+                color="danger"
+                onClick={() => this.handleDeleleStaff(staff.id)}
+              >
+                Xóa
+              </Button>
+            </Col>
+          );
+        });
+        return staffList;
+      }
+    };
 
     return (
       <Container>
@@ -190,12 +247,28 @@ class EmployeeList extends Component {
             +
           </Button>
         </div>
-        <Row>{staffList}</Row>
-        <Modal
-          isOpen={this.state.modal}
-          toggle={this.toggle}
-          className={this.props.className}
-        >
+        {this.props.isLoading ? (
+          <Row>
+            <Loading />
+          </Row>
+        ) : this.props.errMess ? (
+          <Row>
+            <h4>{this.props.errMess}</h4>
+          </Row>
+        ) : (
+          <FadeTransform
+            in
+            transformProps={{
+              exitTransform: "scale(0.5) translateY(-50%)",
+            }}
+          >
+            <Row>
+              <StaffList />
+            </Row>
+          </FadeTransform>
+        )}
+        {/* ADD new staff modal */}
+        <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Thêm nhân viên</ModalHeader>
           <ModalBody>
             <Form onSubmit={this.handleSubmit}>
@@ -270,11 +343,11 @@ class EmployeeList extends Component {
                     value={this.state.newStaff.department}
                     onChange={this.handleInputChange}
                   >
-                    <option>Sale</option>
-                    <option>HR</option>
-                    <option>Marketing</option>
-                    <option>IT</option>
-                    <option>Finance</option>
+                    <option value={"Dept01"}>Sale</option>
+                    <option value={"Dept02"}>HR</option>
+                    <option value={"Dept03"}>Marketing</option>
+                    <option value={"Dept04"}>IT</option>
+                    <option value={"Dept05"}>Finance</option>
                   </Input>
                 </Col>
               </Row>
@@ -334,6 +407,17 @@ class EmployeeList extends Component {
               </Button>
             </Form>
           </ModalBody>
+        </Modal>
+
+        {/* Delete Modal */}
+        <Modal toggle={this.toggleDeletePopup} isOpen={this.state.deleteModal}>
+          <ModalBody>Bạn có chắc muốn xóa nhân viên này?</ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.handleConfirmDeleteBtnModal}>
+              Xác nhận
+            </Button>{" "}
+            <Button onClick={this.handleCancleBtnModal}>Hủy</Button>
+          </ModalFooter>
         </Modal>
       </Container>
     );
